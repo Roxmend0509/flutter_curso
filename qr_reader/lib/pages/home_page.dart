@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:qrreader/models/db_provider.dart';
 import 'package:qrreader/pages/direcciones_page.dart';
 import 'package:qrreader/pages/mapas_pages.dart';
+import 'package:qrreader/providers/scan_list_provider.dart';
 import 'package:qrreader/providers/ui_provider.dart';
 import 'package:qrreader/widgets/custom_navigatorbar.dart';
 import 'package:qrreader/widgets/scan_button.dart';
@@ -15,7 +16,13 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         title: Text('Historial'),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.delete_forever))
+          IconButton(
+              onPressed: () {
+                final scanListProvider =
+                    Provider.of<ScanListProvider>(context, listen: false)
+                        .borrarTodos();
+              },
+              icon: Icon(Icons.delete_forever))
         ],
       ),
       body: _HomePageBody(),
@@ -35,17 +42,19 @@ class _HomePageBody extends StatelessWidget {
     //Cambiar para mostrar la pagina respectiva
     final currentIndex = uiProvider.selectedMenuOpt;
 
-    // TODO: Temporal leer base de datos
-
-    final tempScan = new ScanModel(valor: 'http://google.com');
-    DBProvider.db.nuevoScan(tempScan);
+    //Usar el ScanListProvider
+    final scanListProvider =
+        Provider.of<ScanListProvider>(context, listen: false);
 
     switch (currentIndex) {
       case 0:
+        scanListProvider.cargarScanPorTipo('geo');
         return MapasPage();
       case 1:
+        scanListProvider.cargarScanPorTipo('http');
         return DireccionesPage();
       default:
+        scanListProvider.cargarScanPorTipo('geo');
         return MapasPage();
     }
   }
