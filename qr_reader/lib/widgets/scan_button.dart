@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
+import 'package:qrreader/models/db_provider.dart';
 import 'package:qrreader/providers/scan_list_provider.dart';
+import 'package:qrreader/utils/utils.dart';
 
 class ScanButton extends StatelessWidget {
   @override
@@ -9,15 +11,19 @@ class ScanButton extends StatelessWidget {
     return FloatingActionButton(
         elevation: 0,
         onPressed: () async {
-          final barcodeScanRes =
-              'https://pub.dev/packages/flutter_barcode_scanne';
+          final barcodeScanRes = 'geo:20.126096,-101.189480';
+
+          if (barcodeScanRes == '-1') {
+            return;
+          }
+
           //String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           //  '#3D8BEF', 'Cancelar', false, ScanMode.QR);
           final scanListProvider =
               Provider.of<ScanListProvider>(context, listen: false);
 
-          scanListProvider.nuevoScan(barcodeScanRes);
-          scanListProvider.nuevoScan('geo:15.23.12');
+          final scanNew = await scanListProvider.nuevoScan(barcodeScanRes);
+          launchURL(context, scanNew);
         },
         child: Icon(Icons.filter_center_focus));
   }

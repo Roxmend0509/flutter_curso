@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qrreader/providers/scan_list_provider.dart';
+import 'package:qrreader/utils/utils.dart';
 
 class ScanTiles extends StatelessWidget {
   final String tipo;
@@ -25,7 +26,7 @@ class ScanTiles extends StatelessWidget {
               color: Theme.of(context).primaryColor),
           title: Text(scans[i].valor),
           subtitle: Text(scans[i].id.toString()),
-          onTap: () => print(scans[i].id),
+          onTap: () => launchURL(context, scans[i]),
           trailing: Icon(
             Icons.keyboard_arrow_right,
             color: Colors.grey,
